@@ -1,5 +1,37 @@
-module Rspec
+module RSpec
   module Todo
-    # Your code goes here...
+    def todo(reason = nil, &block)
+      if block_given?
+        begin
+          yield
+        rescue => e
+          if reason
+            pending(reason)
+          else
+            pending(e.inspect)
+          end
+        end
+      else
+        pending(reason)
+      end
+    end
+
+    def not_todo(reason = nil, &block)
+      if block_given?
+        begin
+          yield
+        rescue => e
+          # do nothing
+        else
+          if reason
+            raise(reason)
+          else
+            raise "not todo but passed"
+          end
+        end
+      else
+        pending(reason)
+      end
+    end
   end
 end
