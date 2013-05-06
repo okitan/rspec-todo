@@ -1,6 +1,7 @@
-# Rspec::Todo
+# Rspec::Todo [![Build Status](https://travis-ci.org/okitan/rspec-todo.png?branch=master)](https://travis-ci.org/okitan/rspec-todo)
 
-TODO: Write a gem description
+todo: pending if failed
+not_todo: result errors if passed
 
 ## Installation
 
@@ -18,7 +19,26 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require "rspec/todo"
+
+describe "rspec-todo" do
+  include ::RSpec::Todo
+
+  it "todo results pending if failed" do
+    todo {
+      # your test code which may fail and will fix later
+    }
+  end
+
+  it "not_todo report error when test passed" do
+    not_todo {
+      # your test code which is not correct but cannot fix for some reason
+      #  (e.g. released with the bug and user have already integrated system using the bug)
+    }
+  end
+end
+```
 
 ## Contributing
 
