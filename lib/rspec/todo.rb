@@ -16,11 +16,11 @@ module RSpec
       end
     end
 
-    def not_todo(reason = nil, &block)
+    def not_todo(reason = nil, *errors_expected, &block)
       if block_given?
         begin
           yield
-        rescue => e
+        rescue RSpec::Expectations::ExpectationNotMetError, *errors_expected => e
           # do nothing
         else
           if reason

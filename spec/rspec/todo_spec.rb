@@ -20,14 +20,26 @@ describe "rspec-todo" do
   end
 
   context "not todo" do
-    it "result errors if successed" do
+    it "result error if successed" do
       expect {
         not_todo { true }
       }.to raise_exception
     end
 
-    it "results nothing" do
-      not_todo { raise }
+    it "results nothing when expectation not matched" do
+      not_todo { 1.should == 2 }
+    end
+
+    it "results nothing when specified error occured" do
+      not_todo("runtime error occured", RuntimeError) do
+        raise
+      end
+    end
+
+    it "results error if runtime error occured" do
+      expect {
+        not_todo { raise }
+      }.to raise_exception
     end
   end
 end
