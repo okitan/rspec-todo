@@ -1,7 +1,9 @@
 # Rspec::Todo [![Build Status](https://travis-ci.org/okitan/rspec-todo.png?branch=master)](https://travis-ci.org/okitan/rspec-todo)
 
-todo: pending if failed
-not_todo: result errors if passed
+* todo
+ * pending if failed
+* not_todo
+ * result errors if passed
 
 ## Installation
 
@@ -39,6 +41,14 @@ describe "rspec-todo" do
   end
 end
 ```
+
+## Comparison
+
+| methods  | no errors (passed) | raise error (failed) |
+|----------|-------------|-------------|
+| pending  | failure | pending |
+| todo     | success | pending |
+| not_todo | failure | success |
 
 ## Contributing
 
