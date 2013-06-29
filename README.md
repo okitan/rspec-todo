@@ -42,6 +42,24 @@ describe "rspec-todo" do
 end
 ```
 
+### if: and unless:
+
+switch use to_do and not to_do with options.
+
+
+```ruby
+it "todo results pending if failed and if: is true" do
+  todo(if: true) {
+    # your code which may fail and will fix later
+  }
+end
+
+it "todo ignored if if: is true" do
+  todo(if: false) { # todo is ignored and expectation is evaled directly
+  }
+end
+```
+
 ## Comparison
 
 | methods  | no errors (passed) | raise error (failed) |
