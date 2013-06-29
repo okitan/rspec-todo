@@ -13,6 +13,14 @@ shared_examples "pending" do |sub_description, opts = {}|
   end
 end
 
+shared_examples "being passed" do |sub_description, opts = {}|
+  context(sub_description, opts) do
+    it "works" do
+      expectation
+    end
+  end
+end
+
 shared_examples "error" do |sub_description, opts = {}|
   context(sub_description, opts) do
     it "works" do
@@ -58,8 +66,10 @@ describe "rspec-todo" do
     end
 
     context "without description" do
-      it "passes" do
-        todo { true }
+      it_behaves_like "being passed", "when expectation succeeded" do
+        let(:expectation) do
+          todo { true }
+        end
       end
 
       it_behaves_like "pending", "when expectation failed" do
@@ -71,8 +81,10 @@ describe "rspec-todo" do
 
     context "with if opts" do
       context "are true" do
-        it "passes" do
-          todo(if: true) { true }
+        it_behaves_like "being passed", "when expectation succeeded" do
+          let(:expectation) do
+            todo(if: true) { true }
+          end
         end
 
         it_behaves_like "pending", "when expectation failed" do
@@ -83,8 +95,10 @@ describe "rspec-todo" do
       end
 
       context "are false" do
-        it "passes" do
-          todo(if: false) { true }
+        it_behaves_like "being passed", "when expectation succeeded" do
+          let(:expectation) do
+            todo(if: false) { true }
+          end
         end
 
         it_behaves_like "error", "when expectation failed" do
@@ -97,8 +111,10 @@ describe "rspec-todo" do
 
     context "with unless opts" do
       context "are false" do
-        it "passes" do
-          todo(unless: false) { true }
+        it_behaves_like "being passed", "when expectation succeeded" do
+          let(:expectation) do
+            todo(unless: false) { true }
+          end
         end
 
         it_behaves_like "pending", "when expectation failed" do
@@ -109,8 +125,10 @@ describe "rspec-todo" do
       end
 
       context "are true" do
-        it "passes" do
-          todo(unless: true) { true }
+        it_behaves_like "being passed", "when expectation succeeded" do
+          let(:expectation) do
+            todo(unless: true) { true }
+          end
         end
 
         it_behaves_like "error", "when expectation failed" do
@@ -123,32 +141,40 @@ describe "rspec-todo" do
   end
 
   context "not todo" do
-    it "result error if successed" do
-      expect {
+    it_behaves_like "error", "when succeeded" do
+      let(:expectation) do
         not_todo { true }
-      }.to raise_exception
-    end
-
-    it "results nothing when expectation not matched" do
-      not_todo { 1.should == 2 }
-    end
-
-    it "results nothing when specified error occured" do
-      not_todo("runtime error occured", errors: RuntimeError) do
-        raise
       end
     end
 
-    it "results nothing when specified errors occured" do
-      not_todo("runtime error occured", errors: [ RuntimeError ]) do
-        raise
+    it_behaves_like "being passed", "when expectation not matched" do
+      let(:expectation) do
+        not_todo { 1.should == 2 }
       end
     end
 
-    it "results error if runtime error occured" do
-      expect {
-        not_todo { raise }
-      }.to raise_exception
+    context "when expectation raise exception" do
+      it_behaves_like "being passed", "when error is specified" do
+        let(:expectation) do
+          not_todo("runtime error occured", errors: RuntimeError) do
+            raise
+          end
+        end
+      end
+
+      it_behaves_like "being passed", "when errors are specified" do
+        let(:expectation) do
+          not_todo("runtime error occured", errors: [ RuntimeError ]) do
+            raise
+          end
+        end
+      end
+
+      it_behaves_like "error", "when errors are not specified" do
+        let(:expectation) do
+          not_todo { raise "unexpected" }
+        end
+      end
     end
   end
 end
