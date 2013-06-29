@@ -176,5 +176,89 @@ describe "rspec-todo" do
         end
       end
     end
+
+    context "with if opts" do
+      context "are true" do
+        it_behaves_like "error", "when expectation succeeded" do
+          let(:expectation) do
+            not_todo(if: true) { true }
+          end
+        end
+
+        it_behaves_like "being passed", "when expectation failed" do
+          let(:expectation) do
+            not_todo(if: true) { 1.should == 2 }
+          end
+        end
+
+        it_behaves_like "being passed", "when errors are specified" do
+          let(:expectation) do
+            not_todo(if: true, errors: RuntimeError) { raise }
+          end
+        end
+      end
+
+      context "are false" do
+        it_behaves_like "being passed", "when expectation succeeded" do
+          let(:expectation) do
+            not_todo(if: false) { true }
+          end
+        end
+
+        it_behaves_like "error", "when expectation failed" do
+          let(:expectation) do
+            not_todo(if: false) { 1.should == 2 }
+          end
+        end
+
+        it_behaves_like "error", "even if errors are specified" do
+          let(:expectation) do
+            not_todo(if: false, errors: RuntimeError) { raise }
+          end
+        end
+      end
+    end
+
+    context "with unless opts" do
+      context "are false" do
+        it_behaves_like "error", "when expectation succeeded" do
+          let(:expectation) do
+            not_todo(unless: false) { true }
+          end
+        end
+
+        it_behaves_like "being passed", "when expectation failed" do
+          let(:expectation) do
+            not_todo(unless: false) { 1.should == 2 }
+          end
+        end
+
+        it_behaves_like "being passed", "when errors are specified" do
+          let(:expectation) do
+            not_todo(unless: false, errors: RuntimeError) { raise }
+          end
+        end
+      end
+
+      context "are true" do
+        it_behaves_like "being passed", "when expectation succeeded" do
+          let(:expectation) do
+            not_todo(unless: true) { true }
+          end
+        end
+
+        it_behaves_like "error", "when expectation failed" do
+          let(:expectation) do
+            not_todo(unless: true) { 1.should == 2 }
+          end
+        end
+
+       it_behaves_like "error", "even if errors are specified" do
+          let(:expectation) do
+            not_todo(unless: true, errors: RuntimeError) { raise }
+          end
+        end
+      end
+    end
   end
 end

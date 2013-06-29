@@ -35,20 +35,24 @@ module RSpec
     def not_todo(reason = nil, opts = {}, &block)
       reason, opts = nil, reason if reason.is_a?(Hash)
 
-      if block_given?
-        begin
-          yield
-        rescue RSpec::Expectations::ExpectationNotMetError, *opts[:errors] => e
-          # do nothing
-        else
-          if reason
-            raise(reason)
+      if rspec_todo_works_for(opts)
+        if block_given?
+          begin
+            yield
+          rescue RSpec::Expectations::ExpectationNotMetError, *opts[:errors] => e
+            # do nothing
           else
-            raise "not todo but passed"
+            if reason
+              raise(reason)
+            else
+              raise "not todo but passed"
+            end
           end
+        else
+          pending(reason)
         end
       else
-        pending(reason)
+        yield
       end
     end
   end
