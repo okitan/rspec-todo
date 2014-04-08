@@ -1,5 +1,3 @@
-require "tapp"
-
 module RSpec
   module Todo
     def rspec_todo_works_for(opts = {})
